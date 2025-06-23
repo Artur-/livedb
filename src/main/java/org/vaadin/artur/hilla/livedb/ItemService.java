@@ -1,28 +1,29 @@
 package org.vaadin.artur.hilla.livedb;
 
-import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
+import jakarta.annotation.PostConstruct;
+import jakarta.annotation.PreDestroy;
 
-import com.vaadin.flow.server.auth.AnonymousAllowed;
-
-import org.vaadin.artur.hilla.livedb.ItemEvent.Operation;
-
-import dev.hilla.Endpoint;
-import dev.hilla.Nonnull;
 import io.r2dbc.postgresql.api.PostgresqlConnection;
 import io.r2dbc.spi.ConnectionFactory;
 import io.r2dbc.spi.Wrapped;
+import org.jspecify.annotations.NonNull;
+import org.springframework.stereotype.Service;
+import org.vaadin.artur.hilla.livedb.ItemEvent.Operation;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-@Endpoint
+import com.vaadin.flow.server.auth.AnonymousAllowed;
+import com.vaadin.hilla.BrowserCallable;
+
+@Service
+@BrowserCallable
 @AnonymousAllowed
-public class ItemEndpoint {
+public class ItemService {
 
     private ItemRepository itemRepository;
     private PostgresqlConnection connection;
 
-    public ItemEndpoint(ItemRepository itemRepository, ConnectionFactory connectionFactory) {
+    public ItemService(ItemRepository itemRepository, ConnectionFactory connectionFactory) {
         this.itemRepository = itemRepository;
         Wrapped<PostgresqlConnection> pooledConnection = (Wrapped<PostgresqlConnection>) Mono
                 .from(connectionFactory.create()).block();
@@ -39,14 +40,15 @@ public class ItemEndpoint {
         connection.close().subscribe();
     }
 
-    @Nonnull
-    public Flux<@Nonnull Item> getItems() {
+    @NonNull
+    public Flux<@NonNull Item> getItems() {
         return itemRepository.findAll();
     }
 
-    @Nonnull
-    public Flux<@Nonnull ItemEvent> getItemUpdates() {
+    @NonNull
+    public Flux<@NonNull ItemEvent> getItemUpdates() {
         Flux<ItemEvent> events = connection.getNotifications().map(notification -> {
+            System.out.println("Got event from database: " + notification);
             Operation operation = Operation.forName(notification.getName());
             int id = Integer.parseInt(notification.getParameter());
             return new ItemEvent(operation, id);

@@ -1,6 +1,6 @@
 package org.vaadin.artur.hilla.livedb;
 
-import dev.hilla.Nonnull;
+import org.jspecify.annotations.NonNull;
 
 public class ItemEvent {
     public enum Operation {
@@ -17,7 +17,7 @@ public class ItemEvent {
         }
     }
 
-    @Nonnull
+    @NonNull
     private Operation operation;
 
     private int id;

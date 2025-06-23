@@ -1,15 +1,15 @@
 package org.vaadin.artur.hilla.livedb;
 
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.NotBlank;
+
 import java.time.LocalDateTime;
 
-import javax.validation.constraints.Max;
-import javax.validation.constraints.NotBlank;
-
+import org.jspecify.annotations.NonNull;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.relational.core.mapping.Table;
 
-import dev.hilla.Nonnull;
 
 @Table
 public class Item {
@@ -17,7 +17,7 @@ public class Item {
     @Id
     private Integer id;
 
-    @Nonnull
+    @NonNull
     @NotBlank
     @Max(100)
     private String name;
