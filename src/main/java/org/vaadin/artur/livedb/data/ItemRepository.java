@@ -1,4 +1,4 @@
-package org.vaadin.artur.hilla.livedb;
+package org.vaadin.artur.livedb.data;
 
 import org.springframework.data.repository.reactive.ReactiveCrudRepository;
 

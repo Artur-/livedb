@@ -11,6 +11,6 @@ createdb livedb -O livedb
 
 ## Running the example
 
-Start the application using `./mvnw`
+Start the application using `mvn`
 
 The UI is read only so use a database tool such as `psql` to modify the database table and see the changes.

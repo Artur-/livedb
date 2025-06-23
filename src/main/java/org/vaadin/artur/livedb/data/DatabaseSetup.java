@@ -1,4 +1,4 @@
-package org.vaadin.artur.hilla.livedb;
+package org.vaadin.artur.livedb.data;
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
 
@@ -8,7 +8,6 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.r2dbc.connection.init.ResourceDatabasePopulator;
-
 import io.r2dbc.spi.ConnectionFactory;
 
 @SpringComponent

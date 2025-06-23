@@ -1,4 +1,4 @@
-package org.vaadin.artur.hilla.livedb;
+package org.vaadin.artur.livedb.data;
 
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.NotBlank;
