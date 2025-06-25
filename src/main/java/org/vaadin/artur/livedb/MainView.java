@@ -22,8 +22,8 @@ public class MainView extends Div {
 
     }
 
-    private static List<Item> toList(ListSignal<Item> itemService) {
-        return itemService.value().stream()
+    private static List<Item> toList(ListSignal<Item> itemsSignal) {
+        return itemsSignal.value().stream()
                 .map(item -> item.value()).toList();
     }
 }
