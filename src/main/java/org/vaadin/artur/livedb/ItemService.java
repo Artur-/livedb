@@ -14,8 +14,8 @@ import org.vaadin.artur.livedb.data.ItemRepository;
 import reactor.core.publisher.Mono;
 
 import com.vaadin.flow.server.auth.AnonymousAllowed;
-import com.vaadin.signals.ListSignal;
-import com.vaadin.signals.Signal;
+import com.vaadin.flow.signals.shared.SharedListSignal;
+import com.vaadin.flow.signals.Signal;
 
 @Service
 @AnonymousAllowed
@@ -23,7 +23,7 @@ public class ItemService {
 
     private final PostgresqlConnection connection;
 
-    private final ListSignal<Item> items = new ListSignal<>(Item.class);
+    private final SharedListSignal<Item> items = new SharedListSignal<>(Item.class);
 
     private final ItemRepository itemRepository;
 
@@ -36,7 +36,7 @@ public class ItemService {
         connection = pooledConnection.unwrap();
     }
 
-    private ListSignal<Item> initItems() {
+    private SharedListSignal<Item> initItems() {
         if (!inited) {
             inited = true;
 
@@ -63,17 +63,17 @@ public class ItemService {
                         break;
                     case "item_updated":
                         itemRepository.findById(id).doOnNext(updateItem -> {
-                            items.value().stream()
-                                    .filter(existingItem -> existingItem.value().getId() == updateItem.getId())
+                            items.peek().stream()
+                                    .filter(existingItem -> existingItem.peek().getId() == updateItem.getId())
                                     .findFirst()
                                     .ifPresent(existingItem -> {
-                                        existingItem.value(updateItem);
+                                        existingItem.set(updateItem);
                                     });
                         }).subscribe();
                         break;
                     case "item_deleted":
-                        items.value().stream()
-                                .filter(existingItem -> existingItem.value().getId() == id)
+                        items.peek().stream()
+                                .filter(existingItem -> existingItem.peek().getId() == id)
                                 .findFirst()
                                 .ifPresent(existingItem -> {
                                     items.remove(existingItem);
@@ -93,7 +93,7 @@ public class ItemService {
     }
 
     @NonNull
-    public ListSignal<Item> getItems() {
+    public SharedListSignal<Item> getItems() {
         // This must be lazily inited because signals are not available during
         // @PostConstruct
         return initItems();
